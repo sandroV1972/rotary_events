@@ -1,0 +1,27 @@
+<h1 class="mb-4">Gestione Tipi di Eventi</h1>
+
+<table class="table table-hover">
+  <thead class="thead-light">
+    <tr>
+      <th>Nome</th>
+      <th>Azioni</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @event_types.each do |event_type| %>
+      <tr>
+        <td><%= event_type.name %></td>
+        <td>
+          <%= link_to edit_admin_event_type_path(event_type), class: 'btn btn-secondary btn-sm me-2' do %>
+            <i class="bi bi-pencil"></i> Modifica
+          <% end %>
+          <%= link_to admin_event_type_path(event_type), method: :delete, data: { confirm: 'Sei sicuro?' }, class: 'btn btn-danger btn-sm me-2' do %>
+            <i class="bi bi-trash"></i> Elimina
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'Nuovo Tipo di Evento', new_admin_event_type_path, class: 'btn btn-primary' %>

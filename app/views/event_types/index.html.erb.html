@@ -1,0 +1,21 @@
+<h1>Tipologie di Evento</h1>
+<%= link_to 'Nuova Tipologia', new_event_type_path, class: 'btn btn-primary' %>
+<table>
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Azioni</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @event_types.each do |event_type| %>
+      <tr>
+        <td><%= event_type.name %></td>
+        <td>
+          <%= link_to 'Modifica', edit_event_type_path(event_type), class: 'btn btn-secondary' %>
+          <%= link_to 'Elimina', event_type, data: { turbo_method: :delete, turbo_confirm: 'Sei sicuro?' }, class: 'btn btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

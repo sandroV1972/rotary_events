@@ -1,0 +1,7 @@
+<p>Ciao <%= @user.name %>,</p>
+
+<p>Sei invitato a partecipare all'evento: <strong><%= @event.name %></strong>!</p>
+
+<p>Per favore clicca sul link per confermare la tua partecipazione:</p>
+
+<p><%= link_to 'Conferma Partecipazione', confirm_event_invitation_url(@invitation.token) %></p>

@@ -1,0 +1,41 @@
+<h1>Modifica Utente</h1>
+
+<%= form_with(model: [:admin, @user], local: true) do |form| %>
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@user.errors.count, "errore") %> impediscono di salvare questo utente:</h2>
+
+      <ul>
+        <% @user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :email %>
+    <%= form.email_field :email %>
+  </div>
+
+  <div class="field">
+    <%= form.label :first_name, "Nome" %>
+    <%= form.text_field :first_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :last_name, "Cognome" %>
+    <%= form.text_field :last_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :role_id, "Ruolo" %>
+    <%= form.collection_select :role_id, @roles, :id, :name, prompt: "Seleziona un ruolo" %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit 'Aggiorna Utente' %>
+  </div>
+<% end %>
+
+<%= link_to 'Torna alla Lista', admin_users_path, class: 'btn btn-primary' %>

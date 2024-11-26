@@ -1,0 +1,24 @@
+<h1><%= action_name == 'new' ? 'Nuova Tipologia di Evento' : 'Modifica Tipologia di Evento' %></h1>
+<%= form_with(model: @event_type, local: true) do |form| %>
+  <% if @event_type.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@event_type.errors.count, "error") %> prohibited this event type from being saved:</h2>
+
+      <ul>
+        <% @event_type.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+<%= link_to 'Torna alla Lista', admin_dashboard_path, class: 'btn btn-primary' %>

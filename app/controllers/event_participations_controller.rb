@@ -9,11 +9,10 @@ class EventParticipationsController < ApplicationController
 
   def create
     @event = Event.find(params[:event_id])
-    @participation = @event.event_participations.build(participation_params)
-    @participation.user = current_user
+    @participation = @event.event_participations.find_or_initialize_by(user: current_user)
 
-    if @participation.save
-      redirect_to @event, notice: 'Partecipazione registrata con successo.'
+    if @participation.update(participation_params)
+      redirect_to @event, notice: 'Grazie per aver risposto.'
     else
       render :new
     end

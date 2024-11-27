@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_26_112159) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_26_224654) do
   create_table "event_participations", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "event_id", null: false
@@ -73,7 +73,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_26_112159) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.boolean "admin", default: false
     t.integer "role_id"
     t.string "first_name"
     t.string "last_name"

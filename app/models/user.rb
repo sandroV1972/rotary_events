@@ -16,7 +16,7 @@ class User < ApplicationRecord
 
   # Method to check if the user is an admin
   def admin?
-    admin
+    role&.name == 'admin'
   end
   
   # Full name method

@@ -1,16 +1,13 @@
-<h1 class="mb-4">Admin Dashboard</h1>
+<h1 class="d-flex justify-content-between align-items-center mb-3">Eventi
+  <%= link_to 'Nuovo Evento', new_event_path, class: 'btn btn-primary btn-sm' %>
+</h1>
 
-<h2 class="d-flex justify-content-between align-items-center">
-  Gestione Eventi
-  <%= link_to 'Crea Nuovo Evento', new_admin_event_path, class: 'btn btn-primary btn-sm' %>
-</h2>
-
-<table class="table table-hover">
+<table class="table table-hover mb-5">
   <thead class="thead-light">
     <tr>
       <th>Nome</th>
       <th>Data</th>
-      <th>Azioni</th>
+      <th></th> <!-- Rimuovi la scritta "Azioni" -->
     </tr>
   </thead>
   <tbody>
@@ -18,21 +15,18 @@
       <tr>
         <td>
           <%= link_to event_path(event), class: 'text-decoration-none' do %>
-            <h5 class="mb-0"><%= event.name %></h5>
+            <h5 class="mb-0 event-name"><%= event.name %></h5>
           <% end %>
         </td>
         <td>
           <span class="badge bg-primary"><%= event.date.strftime("%d/%m/%Y") %></span>
         </td>
-        <td>
-          <%= link_to edit_admin_event_path(event), class: 'btn btn-secondary btn-sm me-2' do %>
+        <td class="table-actions">
+          <%= link_to edit_event_path(event), class: 'btn btn-secondary btn-sm me-2' do %>
             <i class="bi bi-pencil"></i> Modifica
           <% end %>
-          <%= link_to admin_event_path(event), method: :delete, data: { confirm: 'Sei sicuro?' }, class: 'btn btn-danger btn-sm me-2' do %>
+          <%= link_to event, method: :delete, data: { confirm: 'Sei sicuro?' }, class: 'btn btn-danger btn-sm me-2' do %>
             <i class="bi bi-trash"></i> Elimina
-          <% end %>
-          <%= link_to invite_admin_event_path(event), class: 'btn btn-primary btn-sm' do %>
-            <i class="bi bi-envelope"></i> Invita
           <% end %>
         </td>
       </tr>
@@ -40,15 +34,17 @@
   </tbody>
 </table>
 
-<h2 class="mb-4">Gestione Utenti</h2>
+<h2 class="d-flex justify-content-between align-items-center">
+Gestione Utenti
+</h2>
 
-<table class="table table-hover">
+<table class="table table-hover mb-5">
   <thead class="thead-light">
     <tr>
       <th>Nome</th>
       <th>Email</th>
       <th>Ruolo</th>
-      <th>Azioni</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -57,7 +53,7 @@
         <td><%= user.full_name %></td>
         <td><%= user.email %></td>
         <td><%= user.role.present? ? user.role.name : 'Nessun ruolo' %></td>
-        <td>
+        <td class="table-actions">
           <%= link_to edit_admin_user_path(user), class: 'btn btn-secondary btn-sm me-2' do %>
             <i class="bi bi-pencil"></i> Modifica
           <% end %>
@@ -75,18 +71,18 @@
   <%= link_to 'Nuovo Tipo di Evento', new_admin_event_type_path, class: 'btn btn-primary btn-sm' %>
 </h2>
 
-<table class="table table-hover">
+<table class="table table-hover mb-5">
   <thead class="thead-light">
     <tr>
       <th>Nome</th>
-      <th>Azioni</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <% @event_types.each do |event_type| %>
       <tr>
         <td><%= event_type.name %></td>
-        <td>
+        <td class="table-actions">
           <%= link_to edit_admin_event_type_path(event_type), class: 'btn btn-secondary btn-sm me-2' do %>
             <i class="bi bi-pencil"></i> Modifica
           <% end %>

@@ -1,7 +1,10 @@
-<p>Ciao <%= @user.name %>,</p>
+<p>Ciao <%= @user.full_name %>,</p>
 
 <p>Sei invitato a partecipare all'evento: <strong><%= @event.name %></strong>!</p>
 
-<p>Per favore clicca sul link per confermare la tua partecipazione:</p>
+<p>Per accettare o rifiutare l'invito e registrare i tuoi ospiti, clicca sul link seguente:</p>
 
-<p><%= link_to 'Conferma Partecipazione', confirm_event_invitation_url(@invitation.token) %></p>
+<p><%= link_to 'Accetta l\'invito', @url %></p>
+
+<p>Grazie,</p>
+<p>Rotary Club Pordenone Alto Livenza</p>

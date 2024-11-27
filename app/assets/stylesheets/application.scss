@@ -3,3 +3,134 @@
 
 // Import other SCSS files if you have them
 // @import "custom";
+
+// Rotary Brand Colors
+$rotary-royal-blue: #17458f; // PMS 286C
+$rotary-gold: #f7a81b;       // PMS 130C
+$rotary-azure: #0067c8;      // PMS 2175C
+$rotary-sky-blue: #00a2e0;   // PMS 2202C
+$rotary-cranberry: #d41367;  // PMS 214C
+$rotary-cardinal: #e02927;   // PMS 485C
+$rotary-turquoise: #00adbb;  // PMS 7466C
+$rotary-orange: #ff7600;     // PMS 2018C
+$rotary-violet: #901f93;     // PMS 2070C
+$rotary-grass: #009739;      // PMS 355C
+$rotary-powder-blue: #b9d9eb; // PMS 290C
+$rotary-moss: #a7aca2;       // PMS 7537C
+$rotary-lavender: #c6bcd0;   // PMS 665C
+$rotary-taupe: #d9c89e;      // PMS 7501C
+$rotary-mist: #9ba4b4;       // PMS 2162C
+$rotary-slate: #657f99;      // PMS 2165C
+$rotary-charcoal: #54565a;   // Cool Gray 11C
+$rotary-pewter: #898a8d;     // Cool Gray 8C
+$rotary-smoke: #b1b1b1;      // Cool Gray 5C
+$rotary-silver: #d0cfcd;     // Cool Gray 2C
+$rotary-white: #ffffff;      // White
+$rotary-black: #000000;      // Black
+$rotary-storm: #7a6e66;      // Warm Gray 10C
+$rotary-ash: #968b83;        // Warm Gray 7C
+$rotary-platinum: #bfb7b0;   // Warm Gray 3C
+$rotary-cloud: #d6d1ca;      // Warm Gray 1C;
+
+//Schema colori Rotary
+
+// Stili personalizzati
+body {
+  background-color: $rotary-white; // Sfondo chiaro
+  color: $rotary-charcoal; // Colore base del testo
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: $rotary-gold; // Colore dei titoli
+}
+
+a {
+  color: $rotary-azure; // Colore per i link
+}
+
+a:hover {
+  color: $rotary-gold; // Hover sui link
+}
+
+.navbar {
+  height: 80px; /* Aumenta l'altezza della navbar */
+  background-color: $rotary-white; /* Colore bianco senza trasparenza */
+}
+
+.navbar .nav-link {
+  color: $rotary-white; // Testo link navbar
+}
+
+.navbar .nav-link:hover {
+  color: $rotary-gold; // Hover sui link della navbar
+}
+
+.navbar .dropdown-menu {
+  background-color: $rotary-gold; // Dropdown menu
+  color: $rotary-white;
+}
+
+.navbar .nav-link.active {
+  color: $rotary-gold; // Link attivo nella navbar
+}
+
+.btn-primary {
+  background-color: $rotary-gold; // Sfondo pulsante primario
+  border-color: $rotary-gold;
+  color: $rotary-white; // Testo pulsante
+}
+
+.btn-primary:hover {
+  background-color: darken($rotary-gold, 10%);
+  border-color: darken($rotary-gold, 10%);
+  color: $rotary-white;
+}
+
+.btn-secondary {
+  background-color: $rotary-royal-blue;
+  border-color: $rotary-royal-blue;
+  color: $rotary-white;
+}
+
+.btn-secondary:hover {
+  background-color: darken($rotary-royal-blue, 10%);
+  border-color: darken($rotary-royal-blue, 10%);
+  color: $rotary-white;
+}
+
+.table {
+  background-color: $rotary-white; // Sfondo tabella
+  color: $rotary-charcoal; // Testo tabella
+}
+
+.table th {
+  background-color: $rotary-sky-blue; // Sfondo intestazioni
+  color: $rotary-white; // Testo intestazioni
+}
+
+.table tr:nth-child(even) {
+  background-color: $rotary-powder-blue; // Righe alternate
+}
+
+.card {
+  border: 1px solid $rotary-charcoal;
+  background-color: $rotary-white; // Sfondo card
+  color: $rotary-charcoal; // Testo card
+}
+
+.card-header {
+  background-color: $rotary-royal-blue; // Sfondo header card
+  color: $rotary-white; // Testo header card
+}
+
+// Altri stili...
+
+.event-name {
+  color: #000; /* Colore nero */
+  font-weight: bold; /* Testo in grassetto */
+  font-size: 1.25rem; /* Leggermente più grande del normale */
+}
+
+.table-actions {
+  text-align: right; /* Giustifica a destra */
+}

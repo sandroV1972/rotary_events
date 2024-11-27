@@ -12,7 +12,9 @@ module Admin
     private
 
     def verify_admin
-      redirect_to root_path, alert: 'Non sei autorizzato a aprore questa pagina.' unless current_user.admin?
+      unless current_user&.admin?
+        redirect_to root_path, alert: 'Non sei autorizzato a questa azione.'
+      end    
     end
   end
 end

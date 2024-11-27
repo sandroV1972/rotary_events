@@ -1,0 +1,10 @@
+<h1>Conferma Invito</h1>
+
+<p>Sei stato invitato all'evento "<%= @event.name %>".</p>
+
+<p>Vuoi accettare o rifiutare l'invito?</p>
+
+<%= form_with url: respond_event_invitation_path(@event, @invitation), method: :post, local: true do |form| %>
+  <%= form.submit 'Accetta', class: 'btn btn-success' %>
+  <%= form.submit 'Rifiuta', class: 'btn btn-danger' %>
+<% end %>

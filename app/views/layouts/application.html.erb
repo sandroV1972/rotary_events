@@ -18,7 +18,7 @@
   <style>
     .navbar {
       height: 80px; /* Aumenta l'altezza della navbar */
-      background-color: $rotary-white; /* Colore bianco con trasparenza */
+      background-color: rgba(255, 255, 255, 0.8) !important; /* Colore bianco con trasparenza */
     }
     .navbar-brand img {
       height: 80px; /* Regola l'altezza del logo */
@@ -28,7 +28,7 @@
 
 <body>
   <nav class="navbar navbar-expand-lg navbar-light sticky-top">
-    <div class="container-fluid">
+    <div class="container"> <!-- Utilizza la classe container per allineare il contenuto al centro -->
       <a class="navbar-brand" href="<%= root_path %>">
         <img src="<%= asset_path('Rotary_Logo_EN21taglio.png') %>" alt="Logo" style="height: 80px;">
       </a>

@@ -44,7 +44,7 @@ Rails.application.configure do
     port:                 587,
     domain:               'rcpnaltolivenza.com',
     user_name:            'rotarypnal.zoom@gmail.com',
-    password:             'rotary2060',
+    password:             'metyblqzaxflbsci',
     authentication:       'plain',
     enable_starttls_auto: true
   }

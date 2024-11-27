@@ -1,0 +1,92 @@
+<h1>Registrazione Partecipazione</h1>
+
+<%= form_with model: [@event, @participation], local: true, id: 'participation_form' do |form| %>
+  <div id="guests_container">
+    <div class="row mb-3 guest-fields">
+      <div class="col-md-5">
+        <div class="form-group">
+          <%= form.label :name, 'Nome' %>
+          <%= form.text_field :name, class: 'form-control', id: 'guest_name', name: 'event_participation[guests_attributes][][name]' %>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="form-group">
+          <%= form.label :surname, 'Cognome' %>
+          <%= form.text_field :surname, class: 'form-control', id: 'guest_surname', name: 'event_participation[guests_attributes][][surname]' %>
+        </div>
+      </div>
+      <div class="col-md-2 d-flex align-items-end">
+        <button type="button" class="btn btn-secondary" id="add_guest">Aggiungi</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="guest_list" class="mb-3">
+    <h3>Ospiti Aggiunti</h3>
+    <ul id="guest_list_items"></ul>
+  </div>
+
+  <%= form.submit 'Invia Registrazione', class: 'btn btn-primary' %>
+<% end %>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('add_guest').addEventListener('click', function() {
+      var guestName = document.getElementById('guest_name').value;
+      var guestSurname = document.getElementById('guest_surname').value;
+
+      if (guestName && guestSurname) {
+        var guestList = document.getElementById('guest_list_items');
+        var listItem = document.createElement('li');
+        listItem.textContent = guestName + ' ' + guestSurname;
+        guestList.appendChild(listItem);
+
+        // Aggiungi i campi nascosti per inviare i dati degli ospiti
+        var container = document.getElementById('guests_container');
+        var hiddenNameField = document.createElement('input');
+        hiddenNameField.type = 'hidden';
+        hiddenNameField.name = 'event_participation[guests_attributes][][name]';
+        hiddenNameField.value = guestName;
+        container.appendChild(hiddenNameField);
+
+        var hiddenSurnameField = document.createElement('input');
+        hiddenSurnameField.type = 'hidden';
+        hiddenSurnameField.name = 'event_participation[guests_attributes][][surname]';
+        hiddenSurnameField.value = guestSurname;
+        container.appendChild(hiddenSurnameField);
+
+        // Cancella il contenuto dei campi di input
+        document.getElementById('guest_name').value = '';
+        document.getElementById('guest_surname').value = '';
+      }
+    });
+  });
+</script>
+
+class EventParticipationsController < ApplicationController
+  before_action :authenticate_user!
+
+  def new
+    @event = Event.find(params[:event_id])
+    @participation = @event.event_participations.build
+    @participation.guests.build
+  end
+
+  def create
+    @event = Event.find(params[:event_id])
+    @participation = @event.event_participations.build(participation_params)
+    @participation.user = current_user
+
+    if @participation.save
+      redirect_to @event, notice: 'Partecipazione registrata con successo.'
+    else
+      render :new
+    end
+  end
+
+  private
+
+  def participation_params
+    params.require(:event_participation).permit(guests_attributes: [:id, :name, :surname, :_destroy])
+  end
+end

@@ -21,6 +21,55 @@
       </div>
     </div>
   </div>
+  <div class="row mt-4">
+    <div class="col-md-8 offset-md-2">
+ 
+    <% if current_user.admin? %>
+    <h2>Utenti e Ospiti Registrati</h2>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Cognome</th>
+          <th>Tipo</th>
+          <th>Stato</th>
+          <th>Invitato da</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @event.invitations.each do |invitation| %>
+          <% if invitation.user %>
+            <tr>
+              <td><%= invitation.user.first_name %></td>
+              <td><%= invitation.user.last_name %></td>
+              <td>Utente</td>
+              <td class="<%= invitation_status_class(invitation.status) %>"><%= invitation_status_text(invitation.status) %></td>
+              <td>-</td>
+            </tr>
+            <% invitation.user.guests.each do |guest| %>
+              <tr>
+                <td><%= guest.name %></td>
+                <td><%= guest.surname %></td>
+                <td>Ospite</td>
+                <td>-</td>
+                <td><%= invitation.user.full_name %></td>
+              </tr>
+            <% end %>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <h2>I Miei Ospiti Registrati</h2>
+    <ul>
+      <% current_user.guests.each do |guest| %>
+        <li><%= guest.name %> <%= guest.surname %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+     </div>
+  </div>
   <% if current_user.admin? %>
   <div class="row mt-4">
     <div class="col-md-8 offset-md-2">
@@ -35,4 +84,3 @@
     </div>
   </div>
 <% end %>
-</div>

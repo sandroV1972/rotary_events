@@ -1,7 +1,7 @@
 class EventParticipation < ApplicationRecord
   belongs_to :user
   belongs_to :event
-  belongs_to :guest, optional: true
+  has_many :guests, dependent: :destroy
 
-  accepts_nested_attributes_for :guest
+  accepts_nested_attributes_for :guests, allow_destroy: true
 end

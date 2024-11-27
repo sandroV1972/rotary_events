@@ -34,6 +34,7 @@
           <th>Tipo</th>
           <th>Stato</th>
           <th>Invitato da</th>
+          <th>Azioni</th>
         </tr>
       </thead>
       <tbody>
@@ -45,6 +46,9 @@
               <td>Utente</td>
               <td class="<%= invitation_status_class(invitation.status) %>"><%= invitation_status_text(invitation.status) %></td>
               <td>-</td>
+              <td>
+                <%= link_to 'Annulla Invito', event_invitation_path(@event, invitation), method: :delete, data: { confirm: 'Sei sicuro di voler annullare questo invito?' }, class: 'btn btn-danger btn-sm' %>
+              </td>
             </tr>
             <% invitation.user.guests.each do |guest| %>
               <tr>
@@ -53,6 +57,7 @@
                 <td>Ospite</td>
                 <td>-</td>
                 <td><%= invitation.user.full_name %></td>
+                <td></td>
               </tr>
             <% end %>
           <% end %>

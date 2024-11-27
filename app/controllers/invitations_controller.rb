@@ -48,4 +48,11 @@ class InvitationsController < ApplicationController
       redirect_to root_path, alert: 'Azione non valida.'
     end
   end
+
+  def destroy
+    @invitation = Invitation.find(params[:id])
+    @event = @invitation.event
+    @invitation.destroy
+    redirect_to @event, notice: 'Invito annullato con successo.'
+  end
 end

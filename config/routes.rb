@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   resources :events do
     resources :event_participations, only: [:new, :create]
-    resources :invitations, only: [:create, :update] do
+    resources :invitations, only: [:create, :update, :destroy] do
       member do
         get 'confirm'
         post 'respond'

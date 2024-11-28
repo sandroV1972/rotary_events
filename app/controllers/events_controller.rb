@@ -12,7 +12,6 @@ class EventsController < ApplicationController
 
   def new
     @event = Event.new
-    @users = User.all
   end
 
   def create
@@ -20,41 +19,36 @@ class EventsController < ApplicationController
     if @event.save
       redirect_to @event, notice: 'Evento creato con successo.'
     else
-      @users = User.all
       render :new
     end
   end
 
-  # Other actions (edit, update, show, destroy)...
   def edit
     @event = Event.find(params[:id])
-    @users = User.all
   end
 
   def update
     @event = Event.find(params[:id])
     if @event.update(event_params)
-      redirect_to @event, notice: 'L\'evento è stato aggiornato con successo.'
+      redirect_to @event, notice: 'Evento aggiornato con successo.'
     else
-      @users = User.all
       render :edit
     end
   end
-  
+
   def destroy
     @event = Event.find(params[:id])
     @event.destroy
     redirect_to events_path, notice: 'Evento eliminato con successo.'
   end
 
-
   private
 
-  def verify_admin
-    redirect_to root_path, alert: 'Non sei autorizzato a questa azione.' unless current_user.admin?
+  def event_params
+    params.require(:event).permit(:name, :description, :date, :location)
   end
 
-  def event_params
-    params.require(:event).permit(:name, :description, :date, :time, :location, :event_type_id, invited_user_ids: [])
+  def verify_admin
+    redirect_to(root_path, alert: 'Non sei autorizzato a questa azione.') unless current_user.admin?
   end
 end

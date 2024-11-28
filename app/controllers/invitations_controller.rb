@@ -3,7 +3,11 @@ class InvitationsController < ApplicationController
 
   def create
     @event = Event.find(params[:event_id])
-    @invitation = @event.invitations.build(user: current_user)
+    @invitation = @event.invitations.find_or_initialize_by(user: current_user)
+
+    if @invitation.new_record?
+      @invitation.sent_at = Time.current
+    end
 
     if @invitation.save
       Rails.logger.info "Invito salvato con successo per l'evento #{@event.name}"

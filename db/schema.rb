@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_27_170214) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_28_113550) do
   create_table "event_participations", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "event_id", null: false
@@ -58,6 +58,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_27_170214) do
     t.string "token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "sent_at"
     t.index ["event_id"], name: "index_invitations_on_event_id"
     t.index ["user_id"], name: "index_invitations_on_user_id"
   end

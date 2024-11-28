@@ -31,12 +31,13 @@
         </tbody>
       </table>
     </div>
-
   </div>
+
   <div class="mb-5">
     <%= link_to 'Modifica Evento', edit_event_path(@event), class: 'btn btn-secondary' %>
     <%= link_to 'Torna alla Lista', events_path, class: 'btn btn-primary' %>
   </div>
+
   <% if current_user.admin? %>
     <h2>Utenti e Ospiti Registrati</h2>
     <table class="table table-hover">
@@ -47,6 +48,7 @@
           <th>Tipo</th>
           <th>Stato</th>
           <th>Invitato da</th>
+          <th>Data Invio</th>
           <th>Azioni</th>
         </tr>
       </thead>
@@ -59,6 +61,7 @@
               <td>Utente</td>
               <td class="<%= invitation_status_class(invitation.status) %>"><%= invitation_status_text(invitation.status) %></td>
               <td>-</td>
+              <td><%= invitation.sent_at.strftime("%d/%m/%Y %H:%M") if invitation.sent_at %></td>
               <td>
                 <%= link_to 'Annulla Invito', event_invitation_path(@event, invitation), method: :delete, data: { confirm: 'Sei sicuro di voler annullare questo invito?' }, class: 'btn btn-danger btn-sm' %>
               </td>
@@ -85,5 +88,4 @@
       <% end %>
     </ul>
   <% end %>
-
- </div>
+</div>

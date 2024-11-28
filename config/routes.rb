@@ -15,13 +15,13 @@ Rails.application.routes.draw do
 
   namespace :admin do
     get 'dashboard', to: 'dashboard#index'
+    resources :users, only: [:index, :new, :create, :edit, :update, :destroy]
     resources :events do
       member do
         get 'invite'
         post 'send_invites'
       end
     end
-    resources :users, only: [:index, :edit, :update, :destroy]
     resources :event_types, only: [:index, :new, :create, :edit, :update, :destroy]
   end
 

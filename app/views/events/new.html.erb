@@ -1,8 +1,9 @@
-<%= form_with(model: @event, local: true) do |form| %>
+<h1>Nuovo Evento</h1>
+
+<%= form_with model: @event, local: true do |form| %>
   <% if @event.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@event.errors.count, "error") %> prohibited this event from being saved:</h2>
-
+      <h2><%= pluralize(@event.errors.count, "error") %> ha impedito il salvataggio dell'evento:</h2>
       <ul>
         <% @event.errors.full_messages.each do |message| %>
           <li><%= message %></li>
@@ -11,59 +12,35 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name %>
+  <div class="form-group">
+    <%= form.label :name, 'Nome Evento' %>
+    <%= form.text_field :name, class: 'form-control' %>
   </div>
 
-  <div class="field">
-    <%= form.label :description %>
-    <%= form.text_area :description %>
+  <div class="form-group">
+    <%= form.label :description, 'Descrizione' %>
+    <%= form.text_area :description, class: 'form-control' %>
   </div>
 
-  <div class="field">
-    <%= form.label :date %>
-    <%= form.date_field :date %>
+  <div class="form-group">
+    <%= form.label :date, 'Data' %>
+    <%= form.date_field :date, class: 'form-control' %>
   </div>
 
-  <div class="field">
-    <%= form.label :time %>
-    <%= form.time_select :time %>
+  <div class="form-group">
+    <%= form.label :time, 'Ora' %>
+    <%= form.time_field :time, class: 'form-control' %>
   </div>
 
-  <div class="field">
-    <%= form.label :location %>
-    <%= form.text_field :location %>
+  <div class="form-group">
+    <%= form.label :location, 'Luogo' %>
+    <%= form.text_field :location, class: 'form-control' %>
   </div>
 
-  <div class="field">
-    <%= form.label :event_type_id, "Tipologia di Evento" %>
-    <%= form.collection_select :event_type_id, EventType.all, :id, :name, prompt: "Seleziona una tipologia" %>
+  <div class="form-group">
+    <%= form.label :event_type_id, 'Tipologia Evento' %>
+    <%= form.collection_select :event_type_id, EventType.all, :id, :name, class: 'form-control' %>
   </div>
 
-  <div class="field">
-    <%= label_tag "invited_user_ids", "Seleziona utenti da invitare" %>
-    <div>
-      <%= check_box_tag 'select_all', '1', false, id: 'select_all' %>
-      <%= label_tag 'select_all', 'Tutti' %>
-    </div>
-    <%= form.collection_check_boxes :invited_user_ids, @users, :id, :email, { include_hidden: false }, { class: 'user-checkbox' } %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit "Crea Evento" %>
-  </div>
+  <%= form.submit 'Crea Evento', class: 'btn btn-primary' %>
 <% end %>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const selectAllCheckbox = document.getElementById('select_all');
-    const userCheckboxes = document.querySelectorAll('.user-checkbox');
-
-    selectAllCheckbox.addEventListener('change', function() {
-      userCheckboxes.forEach(function(checkbox) {
-        checkbox.checked = selectAllCheckbox.checked;
-      });
-    });
-  });
-</script>

@@ -9,6 +9,11 @@ Rails.application.routes.draw do
         post 'respond'
       end
     end
+    member do
+      post 'send_invites'
+      delete 'events/:event_id/cancel_invite/:invitation_id', to: 'events#cancel_invite', as: 'cancel_invite'
+      # delete 'cancel_invite/:id', to: 'events#cancel_invite', as: 'cancel_invite'
+    end
   end
 
   get 'confirm_invitation/:token', to: 'invitations#confirm', as: 'confirm_invitation'
@@ -16,12 +21,6 @@ Rails.application.routes.draw do
   namespace :admin do
     get 'dashboard', to: 'dashboard#index'
     resources :users, only: [:index, :new, :create, :edit, :update, :destroy]
-    resources :events do
-      member do
-        get 'invite'
-        post 'send_invites'
-      end
-    end
     resources :event_types, only: [:index, :new, :create, :edit, :update, :destroy]
   end
 

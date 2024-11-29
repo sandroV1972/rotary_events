@@ -34,53 +34,76 @@
   </div>
 
   <div class="mb-5">
+  <% if current_user.admin? %>
+
     <%= link_to 'Modifica Evento', edit_event_path(@event), class: 'btn btn-secondary' %>
+  <% end %>
     <%= link_to 'Torna alla Lista', events_path, class: 'btn btn-primary' %>
   </div>
 
   <% if current_user.admin? %>
-    <h2>Utenti e Ospiti Registrati</h2>
+    <h2>Invita Utenti</h2>
+    <%= form_with url: send_invites_event_path(@event), method: :post, local: true do |form| %>
+      <div class="form-group">
+        <div class="form-group">
+          <%= check_box_tag 'select_all', '1', false, id: 'select_all' %>
+          <%= label_tag 'select_all', 'Seleziona Tutti' %>
+        </div>
+        <label for="user_ids"></label>
+        <%= collection_check_boxes(:invitation, :user_ids, @users, :id, :full_name) do |b| %>
+          <div class="form-check">
+            <%= b.check_box(class: 'form-check-input') %>
+            <%= b.label(class: 'form-check-label') %>
+          </div>
+        <% end %>
+      </div>
+      <%= form.submit 'Invia Inviti', class: 'btn btn-primary' %>
+      <% end %>
+
+    <div class="mt-3">
+    <h2>Utenti Invitati</h2>
     <table class="table table-hover">
       <thead>
         <tr>
           <th>Nome</th>
-          <th>Cognome</th>
-          <th>Tipo</th>
+          <th>Email</th>
+          <th>Data Invito</th>
           <th>Stato</th>
-          <th>Invitato da</th>
-          <th>Data Invio</th>
-          <th>Azioni</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
         <% @event.invitations.each do |invitation| %>
-          <% if invitation.user %>
-            <tr>
-              <td><%= invitation.user.first_name %></td>
-              <td><%= invitation.user.last_name %></td>
-              <td>Utente</td>
-              <td class="<%= invitation_status_class(invitation.status) %>"><%= invitation_status_text(invitation.status) %></td>
-              <td>-</td>
-              <td><%= invitation.sent_at.strftime("%d/%m/%Y %H:%M") if invitation.sent_at %></td>
-              <td>
-                <%= link_to 'Annulla Invito', event_invitation_path(@event, invitation), method: :delete, data: { confirm: 'Sei sicuro di voler annullare questo invito?' }, class: 'btn btn-danger btn-sm' %>
-              </td>
+          <tr>
+            <td><%= invitation.user.full_name %></td>
+            <td><%= invitation.user.email %></td>
+            <td><%= invitation.sent_at.strftime("%d/%m/%Y %H:%M") if invitation.sent_at %></td>
+            <td class="<%= invitation_status_class(invitation.status) %>"><%= invitation.status.humanize %></td>
+            <td>
+          <%= button_to 'Annulla Invito', { controller: 'events', action: 'cancel_invite', event_id: @event.id, invitation_id: invitation.id }, method: :delete, data: { confirm: 'Sei sicuro di voler annullare questo invito?' }, class: 'btn btn-danger btn-sm' %>
+          </td>
             </tr>
-            <% invitation.user.guests.each do |guest| %>
-              <tr>
-                <td><%= guest.name %></td>
-                <td><%= guest.surname %></td>
-                <td>Ospite</td>
-                <td>-</td>
-                <td><%= invitation.user.full_name %></td>
-                <td></td>
-              </tr>
-            <% end %>
-          <% end %>
         <% end %>
       </tbody>
     </table>
   <% else %>
+  <div>
+  <% if @event.invitations.where(user: current_user).any? %>
+    <% invitation = @event.invitations.find_by(user: current_user) %>
+    <h3>Invito:
+    <% if invitation.status == 'accepted' %>
+          <span class="text-success">ACCETTATO</span>
+        <% elsif invitation.status == 'declined' %>
+          <span class="text-danger">RIFIUTATO</span>
+        <% else %>
+          <span class="text-warning">IN ATTESA</span>
+        <% end %>
+    </h3>
+  
+  <% else %>
+      <h3>Invito: <span class="text-warning">Non ricevuto</span></h3>
+  <% end %>  
+</div>
     <h2>I Miei Ospiti Registrati</h2>
     <ul>
       <% current_user.guests.each do |guest| %>
@@ -88,4 +111,19 @@
       <% end %>
     </ul>
   <% end %>
+  </div>
 </div>
+
+<script>
+  $('.alert').on('click', '.close', function() {
+  $(this).parent().fadeOut();
+  });
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('select_all').addEventListener('change', function() {
+      var checkboxes = document.querySelectorAll('input[name="invitation[user_ids][]"]');
+      for (var checkbox of checkboxes) {
+        checkbox.checked = this.checked;
+      }
+    });
+  });
+</script>

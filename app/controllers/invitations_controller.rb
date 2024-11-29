@@ -60,3 +60,76 @@ class InvitationsController < ApplicationController
     redirect_to @event, notice: 'Invito annullato con successo.'
   end
 end
+
+module Admin
+  class EventsController < ApplicationController
+    before_action :authenticate_user!
+    before_action :verify_admin
+
+    def index
+      @events = Event.all
+    end
+
+    def show
+      @event = Event.find(params[:id])
+      @users = User.all
+    end
+
+    def new
+      @event = Event.new
+    end
+
+    def create
+      @event = Event.new(event_params)
+      if @event.save
+        redirect_to admin_event_path(@event), notice: 'Evento creato con successo.'
+      else
+        render :new
+      end
+    end
+
+    def edit
+      @event = Event.find(params[:id])
+    end
+
+    def update
+      @event = Event.find(params[:id])
+      if @event.update(event_params)
+        redirect_to admin_event_path(@event), notice: 'Evento aggiornato con successo.'
+      else
+        render :edit
+      end
+    end
+
+    def destroy
+      @event = Event.find(params[:id])
+      @event.destroy
+      redirect_to admin_events_path, notice: 'Evento eliminato con successo.'
+    end
+
+    def send_invites
+      @event = Event.find(params[:id])
+      user_ids = params[:user_ids] || []
+      users = User.where(id: user_ids)
+
+      users.each do |user|
+        # Logica per inviare l'invito all'utente
+        Invitation.create(event: @event, user: user, sent_at: Time.current)
+        # Inviare email di invito (assicurati di avere un mailer configurato)
+        UserMailer.event_invitation(user, @event).deliver_now
+      end
+
+      redirect_to admin_event_path(@event), notice: 'Inviti inviati con successo.'
+    end
+
+    private
+
+    def event_params
+      params.require(:event).permit(:name, :description, :date, :location, :event_type_id)
+    end
+
+    def verify_admin
+      redirect_to(root_path, alert: 'Non sei autorizzato a questa azione.') unless current_user.admin?
+    end
+  end
+end

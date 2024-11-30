@@ -1,0 +1,65 @@
+<div class="container" style="max-width: 600px;">
+  <h1>Modifica Stato Invito</h1>
+  <%= form_with model: [@event, @invitation], url: event_invitation_path(@event, @invitation), method: :patch, local: true do |form| %>
+    <div class="form-group">
+      <%= form.label :status, 'Stato Invito' %>
+      <%= form.select :status, options_for_select([['Accettato', 'accepted'], ['Rifiutato', 'declined'], ['In Attesa', 'pending']], @invitation.status), {}, class: 'form-control' %>
+    </div>
+
+    <div id="guests_container" style="<%= @invitation.status == 'accepted' ? '' : 'display: none;' %>">
+      <h2>Aggiungi Ospiti</h2>
+      <div class="guest-fields">
+        <div class="row mb-3">
+          <div class="col-md-5">
+            <div class="form-group">
+              <%= form.label :name, 'Nome' %>
+              <%= form.text_field :name, class: 'form-control guest-name', name: 'event_participation[guests_attributes][][name]' %>
+            </div>
+          </div>
+          <div class="col-md-5">
+            <div class="form-group">
+              <%= form.label :surname, 'Cognome' %>
+              <%= form.text_field :surname, class: 'form-control guest-surname', name: 'event_participation[guests_attributes][][surname]' %>
+            </div>
+          </div>
+          <div class="col-md-2 d-flex align-items-end">
+            <button type="button" class="btn btn-success add-guest">Aggiungi</button>
+          </div>
+        </div>
+      </div>
+      <ul id="guest-list" class="list-unstyled mt-3"></ul>
+    </div>
+
+    <%= form.submit 'Aggiorna Invito', class: 'btn btn-primary' %>
+  <% end %>
+
+  <%= link_to 'Torna alla Lista', event_path(@event), class: 'btn btn-secondary mt-3' %>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelector('select[name="invitation[status]"]').addEventListener('change', function() {
+      var guestsContainer = document.getElementById('guests_container');
+      if (this.value == 'accepted') {
+        guestsContainer.style.display = '';
+      } else {
+        guestsContainer.style.display = 'none';
+      }
+    });
+
+    document.querySelector('.add-guest').addEventListener('click', function() {
+      var guestName = document.querySelector('.guest-name').value;
+      var guestSurname = document.querySelector('.guest-surname').value;
+
+      if (guestName && guestSurname) {
+        var guestList = document.getElementById('guest-list');
+        var newGuestItem = document.createElement('li');
+        newGuestItem.textContent = guestName + ' ' + guestSurname;
+        guestList.appendChild(newGuestItem);
+
+        document.querySelector('.guest-name').value = '';
+        document.querySelector('.guest-surname').value = '';
+      }
+    });
+  });
+</script>

@@ -1,5 +1,9 @@
 class InvitationsController < ApplicationController
   before_action :authenticate_user!, except: [:confirm]
+  before_action :set_event_and_invitation, only: [:edit, :update]
+
+  def edit
+  end
 
   def create
     @event = Event.find(params[:event_id])
@@ -22,11 +26,13 @@ class InvitationsController < ApplicationController
   end
 
   def update
-    @invitation = Invitation.find(params[:id])
-    if @invitation.update(status: params[:status])
-      redirect_to @invitation.event, notice: 'Stato dell\'invito aggiornato con successo.'
+    if @invitation.update(invitation_params)
+      if @invitation.status == 'accepted'
+        @invitation.user.guests.where(event_participation: @invitation.event.event_participations).destroy_all
+      end
+      redirect_to event_path(@event), notice: 'Stato invito aggiornato con successo.'
     else
-      redirect_to @invitation.event, alert: 'Errore nell\'aggiornamento dello stato dell\'invito.'
+      render :edit
     end
   end
 
@@ -58,6 +64,16 @@ class InvitationsController < ApplicationController
     @event = @invitation.event
     @invitation.destroy
     redirect_to @event, notice: 'Invito annullato con successo.'
+  end
+
+  private
+  def set_event_and_invitation
+    @event = Event.find(params[:event_id])
+    @invitation = Invitation.find(params[:id])
+  end
+
+  def invitation_params
+    params.require(:invitation).permit(:status, guests_attributes: [:id, :name, :surname, :_destroy])
   end
 end
 

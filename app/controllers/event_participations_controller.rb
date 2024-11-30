@@ -9,18 +9,31 @@ class EventParticipationsController < ApplicationController
 
   def create
     @event = Event.find(params[:event_id])
-    @participation = @event.event_participations.find_or_initialize_by(user: current_user)
+    @participation = @event.event_participations.build(participation_params)
+    @participation.user = current_user
 
-    if @participation.update(participation_params)
-      redirect_to @event, notice: 'Grazie per aver risposto.'
+    if @participation.save
+      redirect_to event_path(@event), notice: 'Partecipazione registrata con successo.'
     else
       render :new
     end
   end
 
+  #def destroy_guest
+  #  @guest = Guest.find(params[:id])
+  #  @guest.destroy
+  #  redirect_to event_path(@guest.event_participation.event), notice: 'Ospite cancellato con successo.'
+  #end
+  def destroy_guest
+    @guest_event_participation = GuestEventParticipation.find(params[:id])
+    @guest_event_participation.destroy
+    redirect_to event_path(@guest_event_participation.event), notice: 'Ospite cancellato con successo.'
+  end
+
+
   private
 
   def participation_params
-    params.require(:event_participation).permit(guests_attributes: [:id, :name, :surname, :_destroy])
+    params.require(:event_participation).permit(:user_id, guests_attributes: [:id, :name, :surname, :_destroy])
   end
 end

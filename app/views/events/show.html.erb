@@ -1,129 +1,57 @@
-<div class="container mt-4">
-  <div class="row">
-    <div class="col-md-12">
-      <table class="table table-bordered table-striped">
-        <thead class="thead-dark">
-          <tr>
-            <th colspan="2" class="text-center"><h2 class="mb-2"><%= @event.name %></h2></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th class="col-2 text-white">Descrizione</th>
-            <td><%= @event.description %></td>
-          </tr>
-          <tr>
-            <th class="col-2 text-white">Data</th>
-            <td><%= @event.date.strftime("%d/%m/%Y") %></td>
-          </tr>
-          <tr>
-            <th class="col-2 text-white">Ora</th>
-            <td><%= @event.time.present? ? @event.time.strftime("%H:%M") : 'Non specificata' %></td>
-          </tr>
-          <tr>
-            <th class="col-2 text-white">Location</th>
-            <td><%= @event.location %></td>
-          </tr>
-          <tr>
-            <th class="col-2 text-white">Tipologia</th>
-            <td><%= @event.event_type.present? ? @event.event_type.name : 'Non specificata' %></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+<h1><%= @event.name %></h1>
 
-  <div class="mb-5">
-  <% if current_user.admin? %>
+<div class="table-responsive">
+  <table class="table table-bordered">
+    <tbody>
+      <tr>
+        <th>Descrizione</th>
+        <td><%= @event.description %></td>
+      </tr>
+      <tr>
+        <th>Data</th>
+        <td><%= @event.date.strftime("%d/%m/%Y") %></td>
+      </tr>
+      <tr>
+        <th>Ora</th>
+        <td><%= @event.time.present? ? @event.time.strftime("%H:%M") : 'Non specificata' %></td>
+      </tr>
+      <tr>
+        <th>Luogo</th>
+        <td><%= @event.location %></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-    <%= link_to 'Modifica Evento', edit_event_path(@event), class: 'btn btn-secondary' %>
-  <% end %>
-    <%= link_to 'Torna alla Lista', events_path, class: 'btn btn-primary' %>
-  </div>
+<%= link_to 'Torna alla Lista', events_path, class: 'btn btn-primary mb-3' %>
 
-  <% if current_user.admin? %>
-    <h2>Invita Utenti</h2>
-    <%= form_with url: send_invites_event_path(@event), method: :post, local: true do |form| %>
-      <div class="form-group">
-        <div class="form-group">
-          <%= check_box_tag 'select_all', '1', false, id: 'select_all' %>
-          <%= label_tag 'select_all', 'Seleziona Tutti' %>
-        </div>
-        <label for="user_ids"></label>
-        <%= collection_check_boxes(:invitation, :user_ids, @users, :id, :full_name) do |b| %>
-          <div class="form-check">
-            <%= b.check_box(class: 'form-check-input') %>
-            <%= b.label(class: 'form-check-label') %>
-          </div>
-        <% end %>
-      </div>
-      <%= form.submit 'Invia Inviti', class: 'btn btn-primary' %>
-      <% end %>
-
-    <div class="mt-3">
-    <h2>Utenti Invitati</h2>
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>Email</th>
-          <th>Data Invito</th>
-          <th>Stato</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @event.invitations.each do |invitation| %>
-          <tr>
-            <td><%= invitation.user.full_name %></td>
-            <td><%= invitation.user.email %></td>
-            <td><%= invitation.sent_at.strftime("%d/%m/%Y %H:%M") if invitation.sent_at %></td>
-            <td class="<%= invitation_status_class(invitation.status) %>"><%= invitation.status.humanize %></td>
-            <td>
-          <%= button_to 'Annulla Invito', { controller: 'events', action: 'cancel_invite', event_id: @event.id, invitation_id: invitation.id }, method: :delete, data: { confirm: 'Sei sicuro di voler annullare questo invito?' }, class: 'btn btn-danger btn-sm' %>
-          </td>
-            </tr>
-        <% end %>
-      </tbody>
-    </table>
-  <% else %>
-  <div>
+<div>
   <% if @event.invitations.where(user: current_user).any? %>
     <% invitation = @event.invitations.find_by(user: current_user) %>
-    <h3>Invito:
-    <% if invitation.status == 'accepted' %>
-          <span class="text-success">ACCETTATO</span>
-        <% elsif invitation.status == 'declined' %>
-          <span class="text-danger">RIFIUTATO</span>
-        <% else %>
-          <span class="text-warning">IN ATTESA</span>
-        <% end %>
+    <h3>Invito: 
+      <% if invitation.status == 'accepted' %>
+        <span class="text-success">ACCETTATO</span>
+      <% elsif invitation.status == 'declined' %>
+        <span class="text-danger">RIFIUTATO</span>
+      <% else %>
+        <span class="text-warning">IN ATTESA</span>
+      <% end %>
     </h3>
-  
+    <%= link_to 'Modifica Stato Invito', edit_event_invitation_path(@event, invitation), class: 'btn btn-primary' %>
+    <% if invitation.status != 'declined' %>
+      <% if current_user.guests.any? %>
+        <h2>I Miei Ospiti Registrati</h2>
+        <ul>
+          <% current_user.guests.each do |guest| %>
+            <li>
+              <%= guest.name %> <%= guest.surname %>
+              <%= link_to 'Cancella', destroy_guest_event_participation_path(guest.event_participation, guest), method: :delete, data: { confirm: 'Sei sicuro di voler cancellare questo ospite?' }, class: 'btn btn-danger btn-sm' %>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+    <% end %>
   <% else %>
-      <h3>Invito: <span class="text-warning">Non ricevuto</span></h3>
+    <h3>Invito: <span class="text-warning">Non ricevuto</span></h3>
   <% end %>  
 </div>
-    <h2>I Miei Ospiti Registrati</h2>
-    <ul>
-      <% current_user.guests.each do |guest| %>
-        <li><%= guest.name %> <%= guest.surname %></li>
-      <% end %>
-    </ul>
-  <% end %>
-  </div>
-</div>
-
-<script>
-  $('.alert').on('click', '.close', function() {
-  $(this).parent().fadeOut();
-  });
-  document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('select_all').addEventListener('change', function() {
-      var checkboxes = document.querySelectorAll('input[name="invitation[user_ids][]"]');
-      for (var checkbox of checkboxes) {
-        checkbox.checked = this.checked;
-      }
-    });
-  });
-</script>

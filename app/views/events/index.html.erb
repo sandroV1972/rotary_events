@@ -1,7 +1,4 @@
 <h1 class="d-flex justify-content-between align-items-center mb-3">Eventi
-<% if current_user&.admin? %>
-  <%= link_to 'Nuovo Evento', new_event_path, class: 'btn btn-primary btn-sm' %>
-<% end %>
 </h1>
 
 <table class="table table-hover mb-5">
@@ -16,30 +13,15 @@
     <% @events.each do |event| %>
       <tr>
         <td>
-          <%= link_to event_path(event), class: 'text-decoration-none' do %>
-            <h5 class="mb-0 event-name"><%= event.name %></h5>
+          <% if current_user.admin? || event.invitations.exists?(user: current_user) %>
+            <%= link_to event.name, event_path(event), class: 'text-decoration-none' %>
+          <% else %>
+            <%= event.name %>
           <% end %>
         </td>
-        <td>
-          <span class="badge bg-primary"><%= event.date.strftime("%d/%m/%Y") %></span>
-        </td>
-        <td class="table-actions">
-          <% if current_user&.admin? %>
-            <%= link_to edit_event_path(event), class: 'btn btn-secondary btn-sm me-2' do %>
-              <i class="bi bi-pencil"></i> Modifica
-            <% end %>
-            <%= link_to event, method: :delete, data: { confirm: 'Sei sicuro?' }, class: 'btn btn-danger btn-sm me-2' do %>
-              <i class="bi bi-trash"></i> Elimina
-            <% end %>
-          <% end %>
-        </td>
+        <td><%= event.date.strftime("%d/%m/%Y") %></td>
+        <td></td> <!-- Rimuovi i link "Modifica" e "Elimina" -->
       </tr>
     <% end %>
   </tbody>
 </table>
-
-<script>
-$('.alert').on('click', '.close', function() {
-  $(this).parent().fadeOut();
-});
-</script>

@@ -1,6 +1,7 @@
 class EventsController < ApplicationController
   before_action :authenticate_user!
   before_action :verify_admin, only: [:new, :create, :edit, :update, :destroy, :send_invites]
+  before_action :verify_invitation, only: [:show]
 
   def index
     @events = Event.all
@@ -9,6 +10,10 @@ class EventsController < ApplicationController
   def show
     @event = Event.find(params[:id])
     @users = User.all
+    @participation = @event.event_participations.build
+    @participation.guests.build
+    
+      render 'show'
   end
 
   def new
@@ -82,6 +87,7 @@ class EventsController < ApplicationController
     redirect_to event_path(@event), notice: 'Invito annullato con successo.'
   end
 
+  
   private
   def event_params
     params.require(:event).permit(:name, :description, :date, :time, :location, :event_type_id)
@@ -90,4 +96,12 @@ class EventsController < ApplicationController
   def verify_admin
     redirect_to(root_path, alert: 'Non sei autorizzato a questa azione.') unless current_user.admin?
   end
+
+  def verify_invitation
+    @event = Event.find(params[:id])
+    unless current_user.admin? || @event.invitations.exists?(user: current_user)
+      redirect_to events_path, alert: 'Non sei autorizzato a visualizzare questo evento.'
+    end
+  end
+  
 end

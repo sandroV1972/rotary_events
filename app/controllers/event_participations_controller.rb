@@ -4,7 +4,6 @@ class EventParticipationsController < ApplicationController
   def new
     @event = Event.find(params[:event_id])
     @participation = @event.event_participations.build
-    @participation.guests.build
   end
 
   def create
@@ -13,23 +12,17 @@ class EventParticipationsController < ApplicationController
     @participation.user = current_user
 
     if @participation.save
-      redirect_to event_path(@event), notice: 'Partecipazione registrata con successo.'
+      redirect_to @event, notice: 'Partecipazione creata con successo.'
     else
       render :new
     end
   end
 
-  #def destroy_guest
-  #  @guest = Guest.find(params[:id])
-  #  @guest.destroy
-  #  redirect_to event_path(@guest.event_participation.event), notice: 'Ospite cancellato con successo.'
-  #end
   def destroy_guest
-    @guest_event_participation = GuestEventParticipation.find(params[:id])
-    @guest_event_participation.destroy
-    redirect_to event_path(@guest_event_participation.event), notice: 'Ospite cancellato con successo.'
+    @guest = Guest.find(params[:id])
+    @guest.destroy
+    redirect_to event_path(params[:event_id]), notice: 'Ospite cancellato con successo.'
   end
-
 
   private
 

@@ -1,5 +1,5 @@
 class InvitationsController < ApplicationController
-  before_action :authenticate_user!, except: [:confirm]
+  before_action :authenticate_user!
   before_action :set_event_and_invitation, only: [:edit, :update]
 
   def edit
@@ -26,12 +26,40 @@ class InvitationsController < ApplicationController
   end
 
   def update
+    Rails.logger.info ">>>>>Inizio aggiornamento invito"
     if @invitation.update(invitation_params)
+      Rails.logger.info ">>>>>Invito aggiornato con stato: #{@invitation.status}"
       if @invitation.status == 'accepted'
-        @invitation.user.guests.where(event_participation: @invitation.event.event_participations).destroy_all
+        Rails.logger.info "Stato invito accettato, procedo con la gestione degli ospiti"
+
+        # Trova o crea una partecipazione per l'utente
+        participation = @invitation.event.event_participations.find_or_create_by(user: @invitation.user)
+        Rails.logger.info "Partecipazione trovata o creata: #{participation.inspect}"
+
+        if participation.persisted?
+          Rails.logger.info "Partecipazione salvata correttamente"
+          # Aggiungi gli ospiti alla partecipazione
+          if params[:event_participation] && params[:event_participation][:guests_attributes]
+            params[:event_participation][:guests_attributes].each do |guest_attributes|
+              guest = participation.guests.create(guest_attributes.permit(:name, :surname).merge(user_id: @invitation.user.id))
+              if guest.persisted?
+                Rails.logger.info "Ospite creato: #{guest.inspect}"
+              else
+                Rails.logger.error "Errore nel salvataggio dell'ospite: #{guest.errors.full_messages.join(', ')}"
+              end
+            end
+          end
+          redirect_to event_path(@event), notice: 'Stato invito aggiornato con successo.'
+        else
+          Rails.logger.error "Errore nel salvataggio della partecipazione: #{participation.errors.full_messages.join(', ')}"
+          flash[:error] = participation.errors.full_messages.join(', ')
+          render :edit
+        end
+      else
+        redirect_to event_path(@event), notice: 'Stato invito aggiornato con successo.'
       end
-      redirect_to event_path(@event), notice: 'Stato invito aggiornato con successo.'
     else
+      Rails.logger.error "Errore nell'aggiornamento dell'invito: #{@invitation.errors.full_messages.join(', ')}"
       render :edit
     end
   end
@@ -67,13 +95,14 @@ class InvitationsController < ApplicationController
   end
 
   private
+
   def set_event_and_invitation
     @event = Event.find(params[:event_id])
     @invitation = Invitation.find(params[:id])
   end
 
   def invitation_params
-    params.require(:invitation).permit(:status, guests_attributes: [:id, :name, :surname, :_destroy])
+    params.require(:invitation).permit(:status)
   end
 end
 

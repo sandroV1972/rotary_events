@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   devise_for :users
 
   resources :events do
-  #  resources :guest_event_participations, only: [:destroy]
+    resources :guest_event_participations, only: [:destroy]
     resources :event_participations, only: [:new, :create] do
       member do
         delete 'destroy_guest/:id', to: 'event_participations#destroy_guest', as: 'destroy_guest'

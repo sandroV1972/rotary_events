@@ -38,18 +38,17 @@
       <% end %>
     </h3>
     <%= link_to 'Modifica Stato Invito', edit_event_invitation_path(@event, invitation), class: 'btn btn-primary' %>
-    <% if invitation.status != 'declined' %>
-      <% if current_user.guests.any? %>
-        <h2>I Miei Ospiti Registrati</h2>
-        <ul>
-          <% current_user.guests.each do |guest| %>
+    <% if invitation.status == 'accepted' %>
+      <h2>I Miei Ospiti Registrati</h2>
+      <ul>
+        <% @event.event_participations.where(user: current_user).each do |participation| %>
+          <% participation.guests.each do |guest| %>
             <li>
               <%= guest.name %> <%= guest.surname %>
-              <%= link_to 'Cancella', destroy_guest_event_participation_path(guest.event_participation, guest), method: :delete, data: { confirm: 'Sei sicuro di voler cancellare questo ospite?' }, class: 'btn btn-danger btn-sm' %>
             </li>
           <% end %>
-        </ul>
-      <% end %>
+        <% end %>
+      </ul>
     <% end %>
   <% else %>
     <h3>Invito: <span class="text-warning">Non ricevuto</span></h3>

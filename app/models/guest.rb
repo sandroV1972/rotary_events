@@ -1,6 +1,7 @@
 class Guest < ApplicationRecord
-  belongs_to :user
-  belongs_to :event_participation, optional: true
+  belongs_to :event_participation
+  belongs_to :user, optional: true
 
-  validates :name, :surname, presence: true
+  validates :name, presence: true
+  validates :surname, presence: true
 end

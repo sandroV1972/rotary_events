@@ -1,9 +1,9 @@
 <div class="container" style="max-width: 600px;">
   <h1>Modifica Stato Invito</h1>
-  <%= form_with model: [@event, @invitation], url: event_invitation_path(@event, @invitation), method: :patch, local: true do |form| %>
+  <%= form_with model: [@event, @invitation], url: event_invitation_path(@event, @invitation), method: :patch, local: true, id: 'invitation-form' do |form| %>
     <div class="form-group">
       <%= form.label :status, 'Stato Invito' %>
-      <%= form.select :status, options_for_select([['Accettato', 'accepted'], ['Rifiutato', 'declined'], ['In Attesa', 'pending']], @invitation.status), {}, class: 'form-control' %>
+      <%= form.select :status, options_for_select([['Accettato', 'accepted'], ['Rifiutato', 'declined'], ['In Attesa', 'pending']], @invitation.status), {}, class: 'form-control', name: 'invitation[status]' %>
     </div>
 
     <div id="guests_container" style="<%= @invitation.status == 'accepted' ? '' : 'display: none;' %>">
@@ -13,13 +13,13 @@
           <div class="col-md-5">
             <div class="form-group">
               <%= form.label :name, 'Nome' %>
-              <%= form.text_field :name, class: 'form-control guest-name', name: 'event_participation[guests_attributes][][name]' %>
+              <input type="text" class="form-control guest-name">
             </div>
           </div>
           <div class="col-md-5">
             <div class="form-group">
               <%= form.label :surname, 'Cognome' %>
-              <%= form.text_field :surname, class: 'form-control guest-surname', name: 'event_participation[guests_attributes][][surname]' %>
+              <input type="text" class="form-control guest-surname">
             </div>
           </div>
           <div class="col-md-2 d-flex align-items-end">
@@ -57,8 +57,23 @@
         newGuestItem.textContent = guestName + ' ' + guestSurname;
         guestList.appendChild(newGuestItem);
 
+        var guestFields = document.querySelector('.guest-fields');
+        var newGuestNameField = document.createElement('input');
+        newGuestNameField.type = 'hidden';
+        newGuestNameField.name = 'event_participation[guests_attributes][][name]';
+        newGuestNameField.value = guestName;
+        guestFields.appendChild(newGuestNameField);
+
+        var newGuestSurnameField = document.createElement('input');
+        newGuestSurnameField.type = 'hidden';
+        newGuestSurnameField.name = 'event_participation[guests_attributes][][surname]';
+        newGuestSurnameField.value = guestSurname;
+        guestFields.appendChild(newGuestSurnameField);
+
         document.querySelector('.guest-name').value = '';
         document.querySelector('.guest-surname').value = '';
+      } else {
+        alert('Per favore, compila entrambi i campi Nome e Cognome.');
       }
     });
   });

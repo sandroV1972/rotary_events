@@ -30,7 +30,7 @@ Rails.application.routes.draw do
       member do
         post 'send_invites'
         delete 'cancel_invite/:invitation_id', to: 'events#cancel_invite', as: 'cancel_invite'
-        delete 'destroy_guest/:guest_id', to: 'events#destroy_guest', as: 'destroy_guest'
+        match 'destroy_guest/:guest_id', to: 'events#destroy_guest', via: [:delete, :get], as: 'destroy_guest'
       end
       resources :guest_event_participations, only: [:destroy]
     end

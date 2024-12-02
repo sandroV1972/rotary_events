@@ -37,9 +37,12 @@ module Admin
     end
     
     def destroy_guest
-      @guest = Guest.find(params[:id])
+      Rails.logger.info "Evento ID: #{params[:id]}, Guest ID: #{params[:guest_id]}"
+
+      @event = Event.find(params[:id])
+      @guest = Guest.find(params[:guest_id])
       @guest.destroy
-      redirect_to admin_event_path(params[:event_id]), notice: 'Ospite cancellato con successo.'
+      redirect_to admin_event_path(params[:id]), notice: 'Ospite cancellato con successo.'
     end
 
 

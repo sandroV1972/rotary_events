@@ -88,8 +88,9 @@
           <td><%= guest.surname %></td>
           <td><%= guest.user.full_name if guest.user %></td>
           <td>  
-          <%= link_to 'Cancella', destroy_guest_admin_event_path(@event, guest_id: guest.id), method: :delete, data: { confirm: 'Sei sicuro di voler cancellare questo ospite?' }, class: 'btn btn-danger btn-sm' %>
-          </td>
+            <%= button_to 'Cancella', destroy_guest_admin_event_path(@event.id, guest.id), method: :delete, form: { data: { turbo: false } }, data: { confirm: 'Sei sicuro di voler cancellare questo ospite?' }, class: 'btn btn-danger btn-sm' %>
+
+            </td>
         </tr>
       <% end %>
     <% end %>

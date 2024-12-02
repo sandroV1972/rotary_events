@@ -42,12 +42,6 @@ class EventsController < ApplicationController
     end
   end
 
-  def destroy
-    @event = Event.find(params[:id])
-    @event.destroy
-    redirect_to events_path, notice: 'Evento eliminato con successo.'
-  end
-
   def send_invites
     @event = Event.find(params[:id])
     user_ids = params[:invitation][:user_ids].reject(&:blank?) || []
@@ -87,7 +81,6 @@ class EventsController < ApplicationController
     redirect_to event_path(@event), notice: 'Invito annullato con successo.'
   end
 
-  
   private
   def event_params
     params.require(:event).permit(:name, :description, :date, :time, :location, :event_type_id)

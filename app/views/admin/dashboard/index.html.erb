@@ -14,7 +14,7 @@
     <% @events.each do |event| %>
       <tr>
         <td>
-          <%= link_to event_path(event), class: 'text-decoration-none' do %>
+          <%= link_to admin_event_path(event), class: 'text-decoration-none' do %>
             <h5 class="mb-0 event-name"><%= event.name %></h5>
           <% end %>
         </td>

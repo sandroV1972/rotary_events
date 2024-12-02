@@ -1,8 +1,30 @@
-<h1><%= @event.name %></h1>
-<p><%= @event.description %></p>
-<p><%= @event.date.strftime("%d/%m/%Y") %></p>
-<p><%= @event.time.present? ? @event.time.strftime("%H:%M") : 'Non specificata' %></p>
-<p><%= @event.location %></p>
+<h1 class="mb-4"><%= @event.name %></h1>
+
+<div class="table-responsive mb-4">
+  <table class="table table-bordered">
+    <tbody>
+      <tr>
+        <th>Descrizione</th>
+        <td><%= @event.description %></td>
+      </tr>
+      <tr>
+        <th>Data</th>
+        <td><%= @event.date.strftime("%d/%m/%Y") %></td>
+      </tr>
+      <tr>
+        <th>Ora</th>
+        <td><%= @event.time.present? ? @event.time.strftime("%H:%M") : 'Non specificata' %></td>
+      </tr>
+      <tr>
+        <th>Luogo</th>
+        <td><%= @event.location %></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<%= link_to 'Modifica Evento', edit_event_path(@event), class: 'btn btn-secondary' %>
+<%= link_to 'Torna alla Dashboard', admin_dashboard_path, class: 'btn btn-primary' %>
 
 <h2>Invita Utenti</h2>
 <%= form_with url: send_invites_event_path(@event), method: :post, local: true do |form| %>
@@ -64,19 +86,15 @@
         <tr>
           <td><%= guest.name %></td>
           <td><%= guest.surname %></td>
-          <td><%= participation.user&.full_name || 'Utente non trovato' %></td>
-          <td>
-            <%= link_to 'Cancella', destroy_guest_event_participation_path(participation, guest), method: :delete, data: { confirm: 'Sei sicuro di voler cancellare questo ospite?' }, class: 'btn btn-danger btn-sm' %>
+          <td><%= guest.user.full_name if guest.user %></td>
+          <td>  
+          <%= link_to 'Cancella', destroy_guest_admin_event_path(@event, guest_id: guest.id), method: :delete, data: { confirm: 'Sei sicuro di voler cancellare questo ospite?' }, class: 'btn btn-danger btn-sm' %>
           </td>
         </tr>
       <% end %>
     <% end %>
   </tbody>
 </table>
-
-<%= link_to 'Modifica Evento', edit_event_path(@event), class: 'btn btn-secondary' %>
-<%= link_to 'Torna alla Lista', events_path, class: 'btn btn-primary' %>
-
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('select_all').addEventListener('change', function() {

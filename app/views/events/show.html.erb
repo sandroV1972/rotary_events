@@ -41,6 +41,7 @@
     <% if invitation.status == 'accepted' %>
     <div class="mt-3">
     <h2>I Miei Ospiti Registrati</h2>
+    <h4>(per aggiungere o rimuovere devi fare click su Modifica Stato Invito)</h4>
     <% if @event.event_participations.where(user: current_user).exists? %>
       <table class="table table-striped">
         <thead>

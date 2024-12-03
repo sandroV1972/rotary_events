@@ -5,7 +5,32 @@
       <%= form.label :status, 'Stato Invito' %>
       <%= form.select :status, options_for_select([['Accettato', 'accepted'], ['Rifiutato', 'declined'], ['In Attesa', 'pending']], @invitation.status), {}, class: 'form-control', name: 'invitation[status]' %>
     </div>
-
+    <div class="mt-3">
+    <h2>I Miei Ospiti Registrati</h2>
+    <% if @event.event_participations.where(user: current_user).exists? %>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Cognome</th>
+            <!-- Puoi aggiungere altre colonne se necessario -->
+          </tr>
+        </thead>
+        <tbody>
+          <% @event.event_participations.where(user: current_user).each do |participation| %>
+            <% participation.guests.each do |guest| %>
+              <tr>
+                <td><%= guest.name %></td>
+                <td><%= guest.surname %></td>
+                <!-- Puoi aggiungere altre celle se necessario -->
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p>Non hai ancora registrato alcun ospite.</p>
+    <% end %>
     <div id="guests_container" style="<%= @invitation.status == 'accepted' ? '' : 'display: none;' %>">
       <h2>Aggiungi Ospiti</h2>
       <div class="guest-fields">
@@ -33,7 +58,7 @@
     <%= form.submit 'Aggiorna Invito', class: 'btn btn-primary' %>
   <% end %>
 
-  <%= link_to 'Torna alla Lista', event_path(@event), class: 'btn btn-secondary mt-3' %>
+  <%= link_to 'Torna alla Lista', event_path(@event), class: 'btn btn-secondary' %>
 </div>
 
 <script>
